@@ -37,13 +37,14 @@ private static void inlined() {
  - The inlined method gets removed. Make sure that it is not accessed using reflection or similar
  - Only `INVOKEVIRTUAL` and `INVOKESTATIC` calls are inlined. `INVOKESPECIAL` and `INVOKEINTERFACE` calls are not supported
 
-### Inlining public methods
+### Inlining public methods/keeping the method
 Inlining public methods is also possible but a bit more limited.\
 To inline a public method you need to set `keep` to `true` in the `InlineMethod` annotation:
 ```java
 @InlineMethod(keep = true)
 public static void inlined() {
 ```
+When using `keep = true` on a non-static method, a warning will be printed to the console.
 
 <b>Limitations:</b>
  - The method must be `static`
