@@ -13,4 +13,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface InlineMethod {
+
+    /**
+     * Keep the method after inlining.<br>
+     * This will allow you to inline public methods as well.<br>
+     * <b>If a non-static method is inlined and this is set to true, the method can only be inlined into the same class!</b><br>
+     * <b>Also make sure no private fields/methods are accessed in the inlined method!</b>
+     */
+    boolean keep() default false;
+
 }

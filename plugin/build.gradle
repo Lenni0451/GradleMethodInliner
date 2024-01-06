@@ -15,6 +15,7 @@ sourceSets {
 dependencies {
     compileOnly gradleApi()
 
+    api project(":runtime")
     api "net.lenni0451.classtransform:core:1.13.0"
     api "net.lenni0451.classtransform:additionalclassprovider:1.13.0"
 }
