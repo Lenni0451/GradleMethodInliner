@@ -1,50 +1,9 @@
 plugins {
     id "java"
     id "maven-publish"
-    id "signing"
-    id "checkstyle"
-}
-
-base {
-    java.toolchain.languageVersion = JavaLanguageVersion.of(8)
-    compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = "UTF-8"
-
-    archivesName = project.maven_name ?: rootProject.maven_name
-    group = project.maven_group ?: rootProject.maven_group
-    version = project.maven_version ?: rootProject.maven_version
-}
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation "net.lenni0451.classtransform:core:1.13.0"
-}
-
-java {
-    withSourcesJar()
-    withJavadocJar()
 }
 
 publishing {
-    repositories {
-        maven {
-            name = "reposilite"
-            if (rootProject.test_publish.equals("true")) {
-                url = "https://maven.lenni0451.net/test"
-            } else {
-                def releasesUrl = "https://maven.lenni0451.net/releases"
-                def snapshotsUrl = "https://maven.lenni0451.net/snapshots"
-                url = project.maven_version.endsWith("SNAPSHOT") ? snapshotsUrl : releasesUrl
-            }
-
-            credentials(PasswordCredentials)
-            authentication {
-                basic(BasicAuthentication)
-            }
-        }
-    }
     publications {
         maven(MavenPublication) {
             artifactId = project.maven_name
@@ -78,18 +37,6 @@ publishing {
     }
 }
 
-checkstyle {
-    toolVersion = "9.3" //Latest version for Java 8
-    configFile = rootProject.file("config/checkstyle/checkstyle.xml")
-}
-
 signing {
-    setRequired false
-    sign configurations.archives
     sign publishing.publications.maven
 }
-
-project.tasks.withType(PublishToMavenRepository).forEach {
-    it.dependsOn(project.tasks.withType(Sign))
-}
-build.dependsOn(check)

@@ -1,18 +1,7 @@
 plugins {
     id "java-gradle-plugin"
     id "com.gradle.plugin-publish" version "1.2.1"
-    id "signing"
-    id "checkstyle"
     id "net.raphimc.class-token-replacer" version "1.0.0"
-}
-
-base {
-    java.toolchain.languageVersion = JavaLanguageVersion.of(8)
-    compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = "UTF-8"
-
-    archivesName = project.maven_name ?: rootProject.maven_name
-    group = project.maven_group ?: rootProject.maven_group
-    version = project.maven_version ?: rootProject.maven_version
 }
 
 sourceSets {
@@ -21,10 +10,6 @@ sourceSets {
             property("\${version}", project.version)
         }
     }
-}
-
-repositories {
-    mavenCentral()
 }
 
 dependencies {
@@ -53,23 +38,6 @@ gradlePlugin {
 }
 
 publishing {
-    repositories {
-        maven {
-            name = "reposilite"
-            if (rootProject.test_publish.equals("true")) {
-                url = "https://maven.lenni0451.net/test"
-            } else {
-                def releasesUrl = "https://maven.lenni0451.net/releases"
-                def snapshotsUrl = "https://maven.lenni0451.net/snapshots"
-                url = project.maven_version.endsWith("SNAPSHOT") ? snapshotsUrl : releasesUrl
-            }
-
-            credentials(PasswordCredentials)
-            authentication {
-                basic(BasicAuthentication)
-            }
-        }
-    }
     publications {
         pluginMaven(MavenPublication) {
             pom {
@@ -97,18 +65,6 @@ publishing {
     }
 }
 
-checkstyle {
-    toolVersion = "9.3" //Latest version for Java 8
-    configFile = rootProject.file("config/checkstyle/checkstyle.xml")
-}
-
 signing {
-    setRequired false
-    sign configurations.archives
     sign publishing.publications.pluginMaven
 }
-
-project.tasks.withType(PublishToMavenRepository).forEach {
-    it.dependsOn(project.tasks.withType(Sign))
-}
-build.dependsOn(check)
