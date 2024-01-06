@@ -24,16 +24,31 @@ plugins {
 The plugin will automatically load the required `compileOnly` dependencies.
 
 ## Usage
+### Inlining methods
 To mark a method for inlining, you need to add the `InlineMethod` annotation to it:
 ```java
 @InlineMethod
 private static void inlined() {
 ```
 
-<b>Important:</b>
+<b>Limitations:</b>
  - The method must be `private`
  - Recursive methods are not supported
  - The inlined method gets removed. Make sure that it is not accessed using reflection or similar
+ - Only `INVOKEVIRTUAL` and `INVOKESTATIC` calls are inlined. `INVOKESPECIAL` and `INVOKEINTERFACE` calls are not supported
+
+### Inlining public methods
+Inlining public methods is also possible but a bit more limited.\
+To inline a public method you need to set `keep` to `true` in the `InlineMethod` annotation:
+```java
+@InlineMethod(keep = true)
+public static void inlined() {
+```
+
+<b>Limitations:</b>
+ - The method must be `static`
+ - Only `INVOKEVIRTUAL` and `INVOKESTATIC` calls are inlined. `INVOKESPECIAL` and `INVOKEINTERFACE` calls are not supported
+ - Accessing private fields/methods of the class will result in exceptions at runtime
 
 ## Example
 Let's say we have the following class:
