@@ -21,7 +21,7 @@ repositories {
 dependencies {
     compileOnly gradleApi()
 
-    implementation "net.lenni0451.classtransform:core:1.13.0"
+    api "net.lenni0451.classtransform:core:1.13.0"
 }
 
 java {
